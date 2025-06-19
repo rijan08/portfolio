@@ -1,0 +1,42 @@
+/* Font family for body and html */
+body,
+html {
+  font-family: "Biotif", sans-serif;
+}
+
+/* Responsive fine-tuning for extra small screens */
+@media (max-width: 400px) {
+  nav ul li a {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+    font-size: 0.7rem !important;
+  }
+  h1 {
+    font-size: 1.5rem !important;
+  }
+  #about .w-full.flex.flex-col {
+    font-size: 0.9rem !important;
+  }
+  .relative.flex-shrink-0 {
+    width: 12rem !important;
+    height: 15rem !important;
+  }
+  .relative.flex-shrink-0 img {
+    width: 15rem !important;
+    height: 15rem !important;
+  }
+  .about-section p {
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+}
+
+@media (max-width: 640px) {
+  .about-section {
+    padding: 0.5rem;
+  }
+  .about-section img {
+    width: 10rem !important;
+    height: 12rem !important;
+  }
+}
