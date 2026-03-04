@@ -66,6 +66,117 @@
         background: rgba(255, 255, 255, 0.13);
       }
 
+      /* ── Nav ── */
+      #nav-links {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      /* Hamburger button — hidden on desktop */
+      #nav-toggle {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        width: 36px;
+        height: 36px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        flex-shrink: 0;
+      }
+      #nav-toggle span {
+        display: block;
+        width: 22px;
+        height: 1.5px;
+        background: #ccc;
+        border-radius: 2px;
+        transition:
+          transform 0.25s ease,
+          opacity 0.25s ease;
+        transform-origin: center;
+      }
+      #nav-toggle.open span:nth-child(1) {
+        transform: translateY(6.5px) rotate(45deg);
+      }
+      #nav-toggle.open span:nth-child(2) {
+        opacity: 0;
+        transform: scaleX(0);
+      }
+      #nav-toggle.open span:nth-child(3) {
+        transform: translateY(-6.5px) rotate(-45deg);
+      }
+
+      @media (max-width: 560px) {
+        #nav-toggle {
+          display: flex;
+        }
+
+        /* Mobile nav header row: name on left, hamburger on right */
+        nav > div {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        #nav-links {
+          display: none;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0;
+          width: 100%;
+          padding-top: 0.5rem;
+          padding-bottom: 0.25rem;
+        }
+        #nav-links.open {
+          display: flex;
+        }
+        #nav-links li {
+          width: 100%;
+        }
+        #nav-links li a {
+          display: block;
+          width: 100%;
+          padding: 0.65rem 0.5rem !important;
+          font-size: 0.75rem !important;
+          letter-spacing: 0.12em !important;
+          border-bottom: 1px solid #111;
+        }
+        #nav-links li:last-child a {
+          border-bottom: none;
+        }
+      }
+
+      /* ── About section profile image ── */
+      .profile-img-wrap {
+        flex-shrink: 0;
+        width: 16rem;
+      }
+      .profile-img-wrap img {
+        width: 100%;
+        height: 22rem;
+        object-fit: cover;
+        border-radius: 0.75rem;
+      }
+      @media (max-width: 767px) {
+        .profile-img-wrap {
+          width: 100%;
+          max-width: 100%;
+        }
+        .profile-img-wrap img {
+          width: 100%;
+          height: 18rem;
+          border-radius: 0.75rem;
+        }
+      }
+      @media (max-width: 480px) {
+        .profile-img-wrap img {
+          height: 14rem;
+        }
+      }
+
       /* ── Chat Widget ── */
       #chat-bubble {
         position: fixed;
@@ -119,6 +230,24 @@
         transform: scale(1) translateY(0);
         opacity: 1;
         pointer-events: all;
+      }
+
+      /* On small screens, make chat panel fill most of the viewport width */
+      @media (max-width: 480px) {
+        #chat-panel {
+          width: calc(100vw - 2rem);
+          left: 0;
+          max-height: 70vh;
+        }
+        /* Prevent panel from going off screen on right */
+        #chat-bubble {
+          left: 1rem;
+          bottom: 1rem;
+        }
+        #scrollTop {
+          bottom: 1rem;
+          right: 1rem;
+        }
       }
 
       #chat-header {
@@ -255,6 +384,8 @@
         outline: none;
         font-family: "Biotif", sans-serif;
         transition: border-color 0.2s;
+        /* Prevent iOS zoom on focus */
+        font-size: max(0.8rem, 16px);
       }
       #chat-input:focus {
         border-color: #a855f7;
@@ -284,10 +415,19 @@
         cursor: not-allowed;
       }
 
-      @media (max-width: 400px) {
-        #chat-panel {
-          width: calc(100vw - 3rem);
+      /* ── Contact links: full width on mobile ── */
+      @media (max-width: 640px) {
+        #contact .contact-list {
+          max-width: 100% !important;
         }
+      }
+
+      /* ── Prevent horizontal overflow ── */
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        overflow-x: hidden;
       }
     </style>
   </head>
@@ -296,9 +436,18 @@
   >
     <!-- Navigation -->
     <nav
-      class="w-full max-w-3xl mx-auto py-6 px-2 md:px-0 sticky top-0 z-50 bg-black/90 backdrop-blur-sm"
+      class="w-full max-w-3xl mx-auto py-5 px-2 md:px-0 sticky top-0 z-50 bg-black/90 backdrop-blur-sm"
     >
-      <ul class="flex items-center justify-between text-xs">
+      <div>
+        <span
+          class="text-xs uppercase tracking-widest text-gray-500 font-thin block md:hidden"
+          >Rijan S</span
+        >
+        <button id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+      <ul id="nav-links" class="text-xs">
         <li>
           <a
             href="#about"
@@ -345,19 +494,16 @@
         Build. Ship. Grow.
       </h1>
       <div
-        class="flex flex-col md:flex-row items-center md:items-start w-full gap-8"
+        class="flex flex-col md:flex-row items-center md:items-start w-full gap-6 md:gap-8"
       >
-        <div class="relative flex-shrink-0">
-          <img
-            src="images/profile.jpeg"
-            alt="Rijan S"
-            class="w-64 rounded-xl object-cover shadow-lg"
-            style="height: 22rem"
-          />
+        <!-- Profile image — full width on mobile, fixed width on desktop -->
+        <div class="profile-img-wrap relative">
+          <img src="images/profile.jpeg" alt="Rijan S" class="shadow-lg" />
           <div
             class="absolute inset-0 rounded-xl bg-gradient-to-b from-transparent to-black opacity-50 pointer-events-none"
           ></div>
         </div>
+
         <div
           class="w-full flex flex-col justify-center tracking-widest font-thin leading-8 text-sm text-gray-400"
         >
@@ -442,7 +588,7 @@
       </h2>
       <div class="flex flex-col gap-3 w-full">
         <div
-          class="rounded-xl px-5 py-5 border border-[#1a1a2e] hover:border-[#2a2a4a] transition-all duration-200 hover:bg-[#0d0d1a]"
+          class="rounded-xl px-4 sm:px-5 py-5 border border-[#1a1a2e] hover:border-[#2a2a4a] transition-all duration-200 hover:bg-[#0d0d1a]"
         >
           <span class="text-base font-semibold text-teal-300"
             >Software Engineer</span
@@ -481,7 +627,7 @@
         </div>
 
         <div
-          class="rounded-xl px-5 py-5 border border-[#1a1a2e] hover:border-[#2a2a4a] transition-all duration-200 hover:bg-[#0d0d1a]"
+          class="rounded-xl px-4 sm:px-5 py-5 border border-[#1a1a2e] hover:border-[#2a2a4a] transition-all duration-200 hover:bg-[#0d0d1a]"
         >
           <span class="text-base font-semibold text-white"
             >Member of Technical Staff</span
@@ -528,7 +674,7 @@
         </div>
 
         <div
-          class="rounded-xl px-5 py-5 border border-[#1a1a2e] hover:border-[#2a2a4a] transition-all duration-200 hover:bg-[#0d0d1a]"
+          class="rounded-xl px-4 sm:px-5 py-5 border border-[#1a1a2e] hover:border-[#2a2a4a] transition-all duration-200 hover:bg-[#0d0d1a]"
         >
           <span class="text-base font-semibold text-white"
             >Junior Full Stack Developer</span
@@ -706,7 +852,6 @@
           </div>
         </div>
 
-        <!-- AI Tools — new section -->
         <div>
           <p
             class="text-xs text-gray-600 uppercase tracking-widest font-thin mb-3"
@@ -768,7 +913,7 @@
       </h2>
       <div class="flex flex-col gap-3">
         <div
-          class="rounded-xl px-5 py-5 border border-[#1a1a2e] hover:border-[#2a2a4a] transition-all duration-200 hover:bg-[#0d0d1a]"
+          class="rounded-xl px-4 sm:px-5 py-5 border border-[#1a1a2e] hover:border-[#2a2a4a] transition-all duration-200 hover:bg-[#0d0d1a]"
         >
           <span class="text-base font-semibold text-white"
             >B.E. Mechanical Engineering</span
@@ -791,7 +936,7 @@
         </div>
 
         <div
-          class="rounded-xl px-5 py-5 border border-[#1a1a2e] hover:border-[#2a2a4a] transition-all duration-200 hover:bg-[#0d0d1a]"
+          class="rounded-xl px-4 sm:px-5 py-5 border border-[#1a1a2e] hover:border-[#2a2a4a] transition-all duration-200 hover:bg-[#0d0d1a]"
         >
           <span class="text-base font-semibold text-white"
             >Full Stack Development — MERN</span
@@ -833,13 +978,13 @@
         I'm open to new opportunities and collaborations.<br />
         Feel free to reach out — I'll get back to you.
       </p>
-      <div class="flex flex-col gap-0 w-full max-w-sm">
+      <div class="contact-list flex flex-col gap-0 w-full max-w-sm">
         <a
           href="mailto:rijanfedo1998@gmail.com"
           class="flex items-center gap-3 text-gray-400 hover:text-white text-sm font-thin tracking-wider py-3 border-b border-[#1a1a2e] transition-colors duration-200"
         >
           <svg
-            class="w-4 h-4 opacity-50"
+            class="w-4 h-4 opacity-50 flex-shrink-0"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -851,7 +996,7 @@
               d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
             />
           </svg>
-          rijanfedo1998@gmail.com
+          <span class="truncate">rijanfedo1998@gmail.com</span>
         </a>
         <a
           href="https://github.com/rijan08"
@@ -859,7 +1004,7 @@
           class="flex items-center gap-3 text-gray-400 hover:text-white text-sm font-thin tracking-wider py-3 border-b border-[#1a1a2e] transition-colors duration-200"
         >
           <svg
-            class="w-4 h-4 opacity-50"
+            class="w-4 h-4 opacity-50 flex-shrink-0"
             fill="currentColor"
             viewBox="0 0 24 24"
           >
@@ -875,7 +1020,7 @@
           class="flex items-center gap-3 text-gray-400 hover:text-white text-sm font-thin tracking-wider py-3 border-b border-[#1a1a2e] transition-colors duration-200"
         >
           <svg
-            class="w-4 h-4 opacity-50"
+            class="w-4 h-4 opacity-50 flex-shrink-0"
             fill="currentColor"
             viewBox="0 0 24 24"
           >
@@ -891,7 +1036,7 @@
           class="flex items-center gap-3 text-gray-400 hover:text-white text-sm font-thin tracking-wider py-3 border-b border-[#1a1a2e] transition-colors duration-200"
         >
           <svg
-            class="w-4 h-4 opacity-50"
+            class="w-4 h-4 opacity-50 flex-shrink-0"
             fill="currentColor"
             viewBox="0 0 24 24"
           >
@@ -907,7 +1052,7 @@
           class="flex items-center gap-3 text-gray-400 hover:text-white text-sm font-thin tracking-wider py-3 transition-colors duration-200"
         >
           <svg
-            class="w-4 h-4 opacity-50"
+            class="w-4 h-4 opacity-50 flex-shrink-0"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -965,13 +1110,11 @@
 
     <!-- ── AI CHAT WIDGET ── -->
     <div id="chat-bubble">
-      <!-- Toggle button -->
       <button
         id="chat-toggle"
         aria-label="Ask about Rijan"
         title="Ask me anything about Rijan ✨"
       >
-        <!-- Sparkle / AI icon -->
         <svg
           width="22"
           height="22"
@@ -988,7 +1131,6 @@
         </svg>
       </button>
 
-      <!-- Chat panel -->
       <div id="chat-panel">
         <div id="chat-header">
           <div class="chat-avatar">R</div>
@@ -1050,6 +1192,25 @@
     </div>
 
     <script>
+      // ── Hamburger nav toggle ──
+      const navToggle = document.getElementById("nav-toggle");
+      const navLinks = document.getElementById("nav-links");
+
+      navToggle.addEventListener("click", () => {
+        const isExpanded = navToggle.classList.toggle("open");
+        navLinks.classList.toggle("open", isExpanded);
+        navToggle.setAttribute("aria-expanded", isExpanded);
+      });
+
+      // Close menu when a nav link is clicked
+      navLinks.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => {
+          navToggle.classList.remove("open");
+          navLinks.classList.remove("open");
+          navToggle.setAttribute("aria-expanded", "false");
+        });
+      });
+
       // ── Scroll fade-in ──
       const observer = new IntersectionObserver(
         (entries) => {
@@ -1090,7 +1251,6 @@
         if (isOpen) setTimeout(() => input.focus(), 250);
       });
 
-      // Close on outside click
       document.addEventListener("click", (e) => {
         if (
           isOpen &&
