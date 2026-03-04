@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -11,58 +11,334 @@
     />
     <link href="https://fonts.cdnfonts.com/css/biotif" rel="stylesheet" />
     <link rel="icon" type="image/jpeg" href="images/favicon.png" />
-    <link rel="stylesheet" href="css/styles.css" />
-    <!-- All custom styles moved to styles.css -->
     <style>
-      /* All custom styles have been moved to css/styles.css */
+      body {
+        font-family: "Biotif", sans-serif;
+      }
+
+      .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        transition:
+          opacity 0.55s ease,
+          transform 0.55s ease;
+      }
+      .fade-in.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #000;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #222;
+        border-radius: 3px;
+      }
+
+      /* Scroll to top */
+      #scrollTop {
+        position: fixed;
+        bottom: 1.8rem;
+        right: 1.8rem;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+        z-index: 98;
+      }
+      #scrollTop.show {
+        opacity: 1;
+        pointer-events: all;
+      }
+      #scrollTop:hover {
+        background: rgba(255, 255, 255, 0.13);
+      }
+
+      /* ── Chat Widget ── */
+      #chat-bubble {
+        position: fixed;
+        bottom: 1.8rem;
+        left: 1.8rem;
+        z-index: 999;
+      }
+
+      #chat-toggle {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ec4899, #a855f7, #6366f1);
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 24px rgba(168, 85, 247, 0.35);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      #chat-toggle:hover {
+        transform: scale(1.08);
+        box-shadow: 0 6px 30px rgba(168, 85, 247, 0.5);
+      }
+
+      #chat-panel {
+        position: absolute;
+        bottom: 64px;
+        left: 0;
+        width: 340px;
+        max-height: 480px;
+        background: #0f0f0f;
+        border: 1px solid #2a2a2a;
+        border-radius: 16px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        transform: scale(0.92) translateY(10px);
+        opacity: 0;
+        pointer-events: none;
+        transition:
+          transform 0.25s ease,
+          opacity 0.25s ease;
+        transform-origin: bottom left;
+      }
+      #chat-panel.open {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+        pointer-events: all;
+      }
+
+      #chat-header {
+        padding: 14px 16px;
+        border-bottom: 1px solid #1e1e1e;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-shrink: 0;
+      }
+      .chat-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ec4899, #a855f7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        color: white;
+        font-weight: 600;
+        flex-shrink: 0;
+      }
+      .chat-header-info {
+        flex: 1;
+      }
+      .chat-header-name {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #fff;
+      }
+      .chat-header-sub {
+        font-size: 0.7rem;
+        color: #666;
+        margin-top: 1px;
+      }
+      .chat-online-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #22c55e;
+        box-shadow: 0 0 6px #22c55e;
+        flex-shrink: 0;
+      }
+
+      #chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        scroll-behavior: smooth;
+      }
+      #chat-messages::-webkit-scrollbar {
+        width: 3px;
+      }
+      #chat-messages::-webkit-scrollbar-thumb {
+        background: #333;
+      }
+
+      .msg {
+        max-width: 85%;
+        font-size: 0.82rem;
+        line-height: 1.55;
+        padding: 9px 12px;
+        border-radius: 12px;
+        word-break: break-word;
+      }
+      .msg.bot {
+        background: #1a1a1a;
+        color: #ccc;
+        border-bottom-left-radius: 4px;
+        align-self: flex-start;
+      }
+      .msg.user {
+        background: linear-gradient(135deg, #7c3aed, #4f46e5);
+        color: #fff;
+        border-bottom-right-radius: 4px;
+        align-self: flex-end;
+      }
+      .msg.typing {
+        background: #1a1a1a;
+        color: #666;
+        align-self: flex-start;
+        font-style: italic;
+        font-size: 0.75rem;
+      }
+
+      /* Suggestion chips */
+      #chat-suggestions {
+        padding: 0 14px 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        flex-shrink: 0;
+      }
+      .suggestion-chip {
+        font-size: 0.7rem;
+        color: #888;
+        border: 1px solid #2a2a2a;
+        padding: 4px 10px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition:
+          color 0.15s,
+          border-color 0.15s,
+          background 0.15s;
+        background: transparent;
+        white-space: nowrap;
+      }
+      .suggestion-chip:hover {
+        color: #fff;
+        border-color: #a855f7;
+        background: rgba(168, 85, 247, 0.1);
+      }
+
+      #chat-input-area {
+        padding: 10px 12px;
+        border-top: 1px solid #1e1e1e;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-shrink: 0;
+      }
+      #chat-input {
+        flex: 1;
+        background: #1a1a1a;
+        border: 1px solid #2a2a2a;
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-size: 0.8rem;
+        color: #e5e5e5;
+        outline: none;
+        font-family: "Biotif", sans-serif;
+        transition: border-color 0.2s;
+      }
+      #chat-input:focus {
+        border-color: #a855f7;
+      }
+      #chat-input::placeholder {
+        color: #444;
+      }
+
+      #chat-send {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #ec4899, #a855f7);
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: opacity 0.2s;
+      }
+      #chat-send:hover {
+        opacity: 0.85;
+      }
+      #chat-send:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      @media (max-width: 400px) {
+        #chat-panel {
+          width: calc(100vw - 3rem);
+        }
+      }
     </style>
   </head>
   <body
-    class="bg-black min-h-screen text-white flex flex-col items-center px-4 mb-4"
+    class="bg-black min-h-screen text-white flex flex-col items-center px-4 pb-16"
   >
-    <!-- Navigation Bar -->
-    <nav class="w-full max-w-2xl mx-auto py-6 px-2 md:px-0">
-      <ul
-        class="flex items-center justify-between text-base font-normal text-xs"
-      >
+    <!-- Navigation -->
+    <nav
+      class="w-full max-w-3xl mx-auto py-6 px-2 md:px-0 sticky top-0 z-50 bg-black/90 backdrop-blur-sm"
+    >
+      <ul class="flex items-center justify-between text-xs">
         <li>
           <a
             href="#about"
-            class="uppercase text-gray-300 font-thin px-6 py-3 rounded-lg transition-all duration-300 hover:bg-[#23243a] hover:text-white focus:bg-[#23243a] focus:text-white tracking-widest hover:scale-105 hover:-translate-y-1"
+            class="uppercase text-gray-300 font-thin px-5 py-2.5 rounded-lg transition-all duration-300 hover:bg-[#23243a] hover:text-white tracking-widest hover:scale-105 hover:-translate-y-0.5"
             >About</a
           >
         </li>
         <li>
           <a
             href="#experience"
-            class="uppercase text-gray-300 font-thin px-6 py-3 rounded-lg transition-all duration-300 hover:bg-[#23243a] hover:text-white focus:bg-[#23243a] focus:text-white tracking-widest hover:scale-105 hover:-translate-y-1"
+            class="uppercase text-gray-300 font-thin px-5 py-2.5 rounded-lg transition-all duration-300 hover:bg-[#23243a] hover:text-white tracking-widest hover:scale-105 hover:-translate-y-0.5"
             >Experience</a
           >
         </li>
         <li>
           <a
             href="#skills"
-            class="uppercase text-gray-300 font-thin px-6 py-3 rounded-lg transition-all duration-300 hover:bg-[#23243a] hover:text-white focus:bg-[#23243a] focus:text-white tracking-widest hover:scale-105 hover:-translate-y-1"
+            class="uppercase text-gray-300 font-thin px-5 py-2.5 rounded-lg transition-all duration-300 hover:bg-[#23243a] hover:text-white tracking-widest hover:scale-105 hover:-translate-y-0.5"
             >Skills</a
           >
         </li>
         <li>
           <a
-            href="#projects"
-            class="uppercase text-gray-200 font-thin px-6 py-3 rounded-lg transition-all duration-300 hover:bg-[#23243a] hover:text-white focus:bg-[#23243a] focus:text-white tracking-widest hover:scale-105 hover:-translate-y-1"
-            >Projects</a
+            href="#education"
+            class="uppercase text-gray-300 font-thin px-5 py-2.5 rounded-lg transition-all duration-300 hover:bg-[#23243a] hover:text-white tracking-widest hover:scale-105 hover:-translate-y-0.5"
+            >Education</a
           >
         </li>
         <li>
           <a
             href="#contact"
-            class="uppercase text-gray-300 font-thin px-6 py-3 rounded-lg transition-all duration-300 hover:bg-[#23243a] hover:text-white focus:bg-[#23243a] focus:text-white tracking-widest hover:scale-105 hover:-translate-y-1"
+            class="uppercase text-gray-300 font-thin px-5 py-2.5 rounded-lg transition-all duration-300 hover:bg-[#23243a] hover:text-white tracking-widest hover:scale-105 hover:-translate-y-0.5"
             >Contact</a
           >
         </li>
       </ul>
     </nav>
-    <section id="about" class="w-full max-w-4xl m-4">
+
+    <!-- ── ABOUT ── -->
+    <section id="about" class="w-full max-w-3xl mt-4 mb-2 fade-in">
       <h1
         class="text-3xl md:text-5xl font-extrabold mb-8 bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent tracking-wider"
       >
@@ -71,365 +347,854 @@
       <div
         class="flex flex-col md:flex-row items-center md:items-start w-full gap-8"
       >
-        <div
-          class="relative flex-shrink-0 w-[18rem] h-[22rem] md:w-[21rem] md:h-[26rem] flex items-stretch"
-        >
+        <div class="relative flex-shrink-0">
           <img
             src="images/profile.jpeg"
-            alt="[Your Name]"
-            class="w-[18rem] h-[22rem] md:w-[21rem] md:h-[26rem] rounded-xl object-cover shadow-lg"
+            alt="Rijan S"
+            class="w-64 rounded-xl object-cover shadow-lg"
+            style="height: 22rem"
           />
           <div
             class="absolute inset-0 rounded-xl bg-gradient-to-b from-transparent to-black opacity-50 pointer-events-none"
           ></div>
         </div>
         <div
-          class="w-full flex flex-col justify-center tracking-widest font-thin leading-8 text-md text-gray-400"
+          class="w-full flex flex-col justify-center tracking-widest font-thin leading-8 text-sm text-gray-400"
         >
-          <p class="mb-2">
+          <p class="mb-3">
             <span class="font-medium text-white">Hey, I'm Rijan</span> — a
-            Frontend Developer with 3 years of experience. I specialize in
-            building
+            Frontend Developer with
+            <span class="font-medium text-white">3+ years of experience</span>.
+            I specialize in building
             <span class="font-medium text-white">mobile applications</span>
             using <span class="font-medium text-white">React Native</span>, with
             a strong foundation in crafting responsive, user-focused interfaces.
-            I believe in writing clean, maintainable code that scales with
-            product needs.
           </p>
-          <p class="mb-2">
+          <p class="mb-3">
             I love solving
             <span class="font-medium text-white">real-world problems</span>
             through tech and continuously explore new tools, patterns, and best
-            practices. My passion for learning keeps me evolving, whether it's
-            refining performance, improving
-            <span class="font-medium text-white">UI/UX</span>, or adopting
-            <span class="font-medium text-white">modern frameworks</span>.
+            practices. Currently expanding into backend development to grow into
+            a <span class="font-medium text-white">full-stack engineer</span>.
           </p>
-          <p class="">
+          <p class="mb-6">
             I thrive in
             <span class="text-white font-medium">startup environments</span>
-            where speed, creativity, and ownership matter. I'm always excited to
-            <span class="font-medium text-white">collaborate</span> on
-            <span class="font-medium text-white">meaningful products</span>
-            that impact users and push boundaries.
+            where speed, creativity, and ownership matter. Based in
+            <span class="font-medium text-white">Bangalore, India</span>.
+            Outside work: football, fitness, and keeping up with tech.
           </p>
-          <div class="flex flex-wrap gap-4 w-full justify-center mt-6">
+          <div class="flex flex-wrap gap-3 w-full">
             <a
               href="./assets/Rijan.pdf"
               download
-              class="flex items-center gap-2 bg-black px-4 py-2 text-sm font-normal rounded-lg shadow hover:scale-105 transition-all duration-200 border-[1.5px] border-[#23243a] text-gray-400 hover:text-pink-400"
-              style="border-image: none"
+              class="flex items-center gap-2 bg-black px-4 py-2 text-xs font-normal rounded-lg shadow hover:scale-105 transition-all duration-200 border border-[#23243a] text-gray-400 hover:text-pink-400"
             >
-              <span class="flex items-center gap-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4"
-                  />
-                </svg>
-                Download Resume
-              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4"
+                />
+              </svg>
+              Download Resume
             </a>
             <a
-              href="#"
-              onclick="window.open('https://mail.google.com/mail/?view=cm&fs=1&to=rijanfedo1998@gmail.com&su=Contact%20from%20Portfolio&body=Hi%20Rijan%2C%20I%20would%20like%20to%20connect%20with%20you.'); return false;"
-              class="flex items-center gap-2 bg-black px-4 py-2 text-sm font-normal rounded-lg shadow hover:scale-105 transition-all duration-200 border-[1.5px] border-[#23243a] text-gray-400 hover:text-pink-400"
-              style="border-image: none"
+              href="mailto:rijanfedo1998@gmail.com"
+              class="flex items-center gap-2 bg-black px-4 py-2 text-xs font-normal rounded-lg shadow hover:scale-105 transition-all duration-200 border border-[#23243a] text-gray-400 hover:text-pink-400"
             >
-              <span class="flex items-center gap-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  />
-                </svg>
-                Contact Me
-              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                />
+              </svg>
+              Contact Me
             </a>
           </div>
         </div>
       </div>
     </section>
-    <!-- Experience Section -->
-    <section id="experience" class="w-full max-w-4xl m-4">
-      <h2 class="text-2xl md:text-4xl font-bold mb-6 text-white tracking-wide">
+
+    <div
+      class="w-full max-w-3xl my-10 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"
+    ></div>
+
+    <!-- ── EXPERIENCE ── -->
+    <section id="experience" class="w-full max-w-3xl mb-2 fade-in">
+      <h2 class="text-2xl md:text-4xl font-bold mb-8 text-white tracking-wide">
         Experience
       </h2>
-      <div class="flex flex-wrap gap-8 w-full">
+      <div class="flex flex-col gap-3 w-full">
         <div
-          class="rounded-xl p-6 shadow-lg flex flex-col gap-1 w-full md:w-[48%] max-w-full tracking-wider font-thin"
+          class="rounded-xl px-5 py-5 border border-[#1a1a2e] hover:border-[#2a2a4a] transition-all duration-200 hover:bg-[#0d0d1a]"
         >
-          <span class="text-lg font-semibold text-teal-300"
+          <span class="text-base font-semibold text-teal-300"
             >Software Engineer</span
           >
           <div
-            class="flex flex-row flex-wrap items-center gap-1 text-gray-400 text-base font-thin tracking-wider"
+            class="flex flex-row flex-wrap items-center gap-1 text-gray-400 text-sm font-thin tracking-wider mt-1"
           >
             <a
               href="https://www.loadshare.net/"
               target="_blank"
-              class="underline text-white tracking-wider"
-              >Loadshare</a
+              class="underline text-white"
+              >Loadshare Networks</a
             >
-            <span class="mx-1">&bull;</span>
+            <span class="mx-1 text-gray-600">&bull;</span>
             <span>Bangalore, Karnataka</span>
           </div>
-          <div class="text-gray-400 text-base">
-            <span>Feb 2025</span>
-            <span class="mx-1">&#8212;</span>
-            <span>Present</span>
-            <span class="mx-1">&bull;</span>
-            <span>4 mos</span>
+          <div class="text-gray-500 text-xs font-thin tracking-wider mt-1 mb-4">
+            Feb 2025 &mdash; Present
           </div>
+          <ul
+            class="text-gray-400 text-sm font-thin tracking-wide leading-7 list-none space-y-1"
+          >
+            <li class="before:content-['–'] before:mr-2 before:text-gray-600">
+              Building and maintaining frontend features for logistics and
+              supply chain products used at scale.
+            </li>
+            <li class="before:content-['–'] before:mr-2 before:text-gray-600">
+              Working across React and React Native to deliver reliable,
+              performant user interfaces.
+            </li>
+            <li class="before:content-['–'] before:mr-2 before:text-gray-600">
+              Collaborating with cross-functional teams in a fast-paced startup
+              environment.
+            </li>
+          </ul>
         </div>
+
         <div
-          class="rounded-xl p-6 shadow-lg flex flex-col gap-1 w-full md:w-[48%] max-w-full tracking-wider font-thin"
+          class="rounded-xl px-5 py-5 border border-[#1a1a2e] hover:border-[#2a2a4a] transition-all duration-200 hover:bg-[#0d0d1a]"
         >
-          <span class="text-lg font-semibold text-white"
-            >Frontend Developer</span
+          <span class="text-base font-semibold text-white"
+            >Member of Technical Staff</span
           >
           <div
-            class="flex flex-row flex-wrap items-center gap-1 text-gray-400 text-base font-thin tracking-wider"
+            class="flex flex-row flex-wrap items-center gap-1 text-gray-400 text-sm font-thin tracking-wider mt-1"
           >
             <a
               href="https://www.fynmobility.com/"
               target="_blank"
-              class="underline text-white tracking-wider"
+              class="underline text-white"
               >Fyn Mobility</a
             >
-            <span class="mx-1">&bull;</span>
+            <span class="mx-1 text-gray-600">&bull;</span>
             <span>Bangalore, Karnataka</span>
           </div>
-          <div class="text-gray-400 text-base">
-            <span>March 2023</span>
-            <span class="mx-1">&#8212;</span>
-            <span>Dec 2024</span>
-            <span class="mx-1">&bull;</span>
-            <span>1 yr 10 mos</span>
+          <div class="text-gray-500 text-xs font-thin tracking-wider mt-1 mb-4">
+            Mar 2023 &mdash; Dec 2024 &bull; 1 yr 10 mos
           </div>
+          <ul
+            class="text-gray-400 text-sm font-thin tracking-wide leading-7 list-none space-y-1"
+          >
+            <li class="before:content-['–'] before:mr-2 before:text-gray-600">
+              Solely owned and maintained the entire product — both frontend and
+              backend — ensuring seamless functionality and system stability.
+            </li>
+            <li class="before:content-['–'] before:mr-2 before:text-gray-600">
+              Developed and maintained React Native and Next.js applications,
+              integrating user-centric features with robust backend operations.
+            </li>
+            <li class="before:content-['–'] before:mr-2 before:text-gray-600">
+              Extended Django's admin panel by building new operational modules,
+              significantly reducing manual effort for the ops team.
+            </li>
+            <li class="before:content-['–'] before:mr-2 before:text-gray-600">
+              Maintained and monitored AWS infrastructure, ensuring optimal
+              performance and scalability of microservices.
+            </li>
+            <li class="before:content-['–'] before:mr-2 before:text-gray-600">
+              Delivered critical updates and bug fixes while improving overall
+              efficiency and minimizing operational downtime.
+            </li>
+          </ul>
         </div>
+
         <div
-          class="rounded-xl p-6 shadow-lg flex flex-col gap-1 w-full md:w-[48%] max-w-full tracking-wider font-thin"
+          class="rounded-xl px-5 py-5 border border-[#1a1a2e] hover:border-[#2a2a4a] transition-all duration-200 hover:bg-[#0d0d1a]"
         >
-          <span class="text-lg font-semibold text-white"
-            >Junior React Developer</span
+          <span class="text-base font-semibold text-white"
+            >Junior Full Stack Developer</span
           >
           <div
-            class="flex flex-row flex-wrap items-center gap-1 text-gray-400 text-base font-thin tracking-wider"
+            class="flex flex-row flex-wrap items-center gap-1 text-gray-400 text-sm font-thin tracking-wider mt-1"
           >
             <a
               href="https://www.uplogictech.com/"
               target="_blank"
-              class="underline text-white tracking-wider"
-              >Uplogic</a
+              class="underline text-white"
+              >Uplogic Technologies</a
             >
-            <span class="mx-1">&bull;</span>
-            <span>Madurai, TamilNadu</span>
+            <span class="mx-1 text-gray-600">&bull;</span>
+            <span>Madurai, Tamil Nadu</span>
           </div>
-          <div class="text-gray-400 text-base">
-            <span>Feb 2022</span>
-            <span class="mx-1">&#8212;</span>
-            <span>Feb 2023</span>
-            <span class="mx-1">&bull;</span>
-            <span>1 yr</span>
+          <div class="text-gray-500 text-xs font-thin tracking-wider mt-1 mb-4">
+            Feb 2022 &mdash; Feb 2023 &bull; 1 yr
           </div>
-        </div>
-        <div
-          class="animate-pulse rounded-xl p-6 shadow-lg flex flex-col gap-4 w-full md:w-[48%] max-w-full"
-        >
-          <!-- Title Placeholder -->
-          <div class="h-5 bg-gray-700 rounded w-2/3"></div>
-
-          <!-- Company and Location Placeholder -->
-          <div class="flex gap-2 flex-wrap items-center">
-            <div class="h-4 bg-gray-700 rounded w-24"></div>
-            <div class="h-4 bg-gray-700 rounded w-1.5"></div>
-            <div class="h-4 bg-gray-700 rounded w-32"></div>
-          </div>
-
-          <!-- Duration Placeholder -->
-          <div class="flex gap-2 flex-wrap items-center">
-            <div class="h-4 bg-gray-700 rounded w-20"></div>
-            <div class="h-4 bg-gray-700 rounded w-4"></div>
-            <div class="h-4 bg-gray-700 rounded w-16"></div>
-            <div class="h-4 bg-gray-700 rounded w-1.5"></div>
-            <div class="h-4 bg-gray-700 rounded w-20"></div>
-          </div>
+          <ul
+            class="text-gray-400 text-sm font-thin tracking-wide leading-7 list-none space-y-1"
+          >
+            <li class="before:content-['–'] before:mr-2 before:text-gray-600">
+              Worked extensively on multiple React Native projects, contributing
+              to feature development and bug fixes.
+            </li>
+            <li class="before:content-['–'] before:mr-2 before:text-gray-600">
+              Developed a React Native project from scratch, managing the
+              complete frontend lifecycle.
+            </li>
+            <li class="before:content-['–'] before:mr-2 before:text-gray-600">
+              Built and enhanced React.js applications with a focus on user
+              experience and performance.
+            </li>
+            <li class="before:content-['–'] before:mr-2 before:text-gray-600">
+              Collaborated with cross-functional teams to ensure seamless
+              project delivery.
+            </li>
+          </ul>
         </div>
       </div>
-      <!-- Career Highlight Card for odd number of items -->
-      <!-- <div class="flex flex-wrap justify-center gap-4 mt-6">
-        <div
-          class="bg-[#23243a] border border-[#3b3c5a] px-4 py-2 rounded-full text-sm text-teal-300 shadow hover:scale-105 transition"
-        >
-          🚀 Shipped 10+ Apps
-        </div>
-        <div
-          class="bg-[#23243a] border border-[#3b3c5a] px-4 py-2 rounded-full text-sm text-purple-300 shadow hover:scale-105 transition"
-        >
-          ⚛️ React Native Specialist
-        </div>
-        <div
-          class="bg-[#23243a] border border-[#3b3c5a] px-4 py-2 rounded-full text-sm text-yellow-300 shadow hover:scale-105 transition"
-        >
-          🎯 Startup Contributor
-        </div>
-        <div
-          class="bg-[#23243a] border border-[#3b3c5a] px-4 py-2 rounded-full text-sm text-pink-300 shadow hover:scale-105 transition"
-        >
-          🧠 UI/UX Oriented
-        </div>
-      </div> -->
     </section>
-    <!-- Skills Section -->
-    <section id="skills" class="w-full max-w-4xl m-4">
-      <h2 class="text-2xl md:text-4xl font-bold mb-6 text-white tracking-wide">
+
+    <div
+      class="w-full max-w-3xl my-10 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"
+    ></div>
+
+    <!-- ── SKILLS ── -->
+    <section id="skills" class="w-full max-w-3xl mb-2 fade-in">
+      <h2 class="text-2xl md:text-4xl font-bold mb-8 text-white tracking-wide">
         Skills
       </h2>
-      <!-- Old skills UI (pill badges) -->
+      <div class="flex flex-col gap-6">
+        <div>
+          <p
+            class="text-xs text-gray-600 uppercase tracking-widest font-thin mb-3"
+          >
+            Frontend
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span
+              class="bg-[#23243a] px-4 py-1.5 rounded-full text-sm text-white shadow hover:scale-105 transition cursor-default"
+              >React Native</span
+            >
+            <span
+              class="bg-[#23243a] px-4 py-1.5 rounded-full text-sm text-white shadow hover:scale-105 transition cursor-default"
+              >React.js</span
+            >
+            <span
+              class="bg-[#23243a] px-4 py-1.5 rounded-full text-sm text-white shadow hover:scale-105 transition cursor-default"
+              >Next.js</span
+            >
+            <span
+              class="bg-[#23243a] px-4 py-1.5 rounded-full text-sm text-white shadow hover:scale-105 transition cursor-default"
+              >TypeScript</span
+            >
+            <span
+              class="bg-[#23243a] px-4 py-1.5 rounded-full text-sm text-white shadow hover:scale-105 transition cursor-default"
+              >JavaScript</span
+            >
+            <span
+              class="bg-[#23243a] px-4 py-1.5 rounded-full text-sm text-white shadow hover:scale-105 transition cursor-default"
+              >Tailwind CSS</span
+            >
+            <span
+              class="bg-[#23243a] px-4 py-1.5 rounded-full text-sm text-white shadow hover:scale-105 transition cursor-default"
+              >Shadcn UI</span
+            >
+          </div>
+        </div>
 
-      <div class="flex flex-wrap gap-4 w-full">
-        <div
-          class="bg-[#23243a] px-4 py-2 rounded-full text-sm text-white shadow hover:scale-105 transition"
-        >
-          React Native
+        <div>
+          <p
+            class="text-xs text-gray-600 uppercase tracking-widest font-thin mb-3"
+          >
+            State Management
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span
+              class="bg-[#23243a] px-4 py-1.5 rounded-full text-sm text-white shadow hover:scale-105 transition cursor-default"
+              >Redux</span
+            >
+            <span
+              class="bg-[#23243a] px-4 py-1.5 rounded-full text-sm text-white shadow hover:scale-105 transition cursor-default"
+              >Zustand</span
+            >
+            <span
+              class="bg-[#23243a] px-4 py-1.5 rounded-full text-sm text-white shadow hover:scale-105 transition cursor-default"
+              >Context API</span
+            >
+          </div>
         </div>
-        <div
-          class="bg-[#23243a] px-4 py-2 rounded-full text-sm text-white shadow hover:scale-105 transition"
-        >
-          React.js
+
+        <div>
+          <p
+            class="text-xs text-gray-600 uppercase tracking-widest font-thin mb-3"
+          >
+            Backend & Database
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span
+              class="bg-[#23243a] px-4 py-1.5 rounded-full text-sm text-white shadow hover:scale-105 transition cursor-default"
+              >Python</span
+            >
+            <span
+              class="bg-[#23243a] px-4 py-1.5 rounded-full text-sm text-white shadow hover:scale-105 transition cursor-default"
+              >Django</span
+            >
+            <span
+              class="bg-[#23243a] px-4 py-1.5 rounded-full text-sm text-white shadow hover:scale-105 transition cursor-default"
+              >REST APIs</span
+            >
+            <span
+              class="bg-[#23243a] px-4 py-1.5 rounded-full text-sm text-white shadow hover:scale-105 transition cursor-default"
+              >PostgreSQL</span
+            >
+            <span
+              class="bg-[#23243a] px-4 py-1.5 rounded-full text-sm text-white shadow hover:scale-105 transition cursor-default"
+              >MongoDB</span
+            >
+            <span
+              class="bg-[#23243a] px-4 py-1.5 rounded-full text-sm text-white shadow hover:scale-105 transition cursor-default"
+              >InfluxDB</span
+            >
+          </div>
         </div>
-        <div
-          class="bg-[#23243a] px-4 py-2 rounded-full text-sm text-white shadow hover:scale-105 transition"
-        >
-          TypeScript
+
+        <div>
+          <p
+            class="text-xs text-gray-600 uppercase tracking-widest font-thin mb-3"
+          >
+            Tools & Infrastructure
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span
+              class="bg-[#23243a] px-4 py-1.5 rounded-full text-sm text-white shadow hover:scale-105 transition cursor-default"
+              >Git & GitHub</span
+            >
+            <span
+              class="bg-[#23243a] px-4 py-1.5 rounded-full text-sm text-white shadow hover:scale-105 transition cursor-default"
+              >AWS</span
+            >
+            <span
+              class="bg-[#23243a] px-4 py-1.5 rounded-full text-sm text-white shadow hover:scale-105 transition cursor-default"
+              >Ubuntu</span
+            >
+            <span
+              class="bg-[#23243a] px-4 py-1.5 rounded-full text-sm text-white shadow hover:scale-105 transition cursor-default"
+              >Trello</span
+            >
+            <span
+              class="bg-[#23243a] px-4 py-1.5 rounded-full text-sm text-white shadow hover:scale-105 transition cursor-default"
+              >ClickUp</span
+            >
+          </div>
         </div>
-        <div
-          class="bg-[#23243a] px-4 py-2 rounded-full text-sm text-white shadow hover:scale-105 transition"
-        >
-          JavaScript
+
+        <!-- AI Tools — new section -->
+        <div>
+          <p
+            class="text-xs text-gray-600 uppercase tracking-widest font-thin mb-3"
+          >
+            AI Tools
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span
+              class="bg-[#1a1a2e] border border-purple-900/50 px-4 py-1.5 rounded-full text-sm text-purple-300 shadow hover:scale-105 transition cursor-default"
+              >GitHub Copilot</span
+            >
+            <span
+              class="bg-[#1a1a2e] border border-purple-900/50 px-4 py-1.5 rounded-full text-sm text-purple-300 shadow hover:scale-105 transition cursor-default"
+              >Claude</span
+            >
+            <span
+              class="bg-[#1a1a2e] border border-purple-900/50 px-4 py-1.5 rounded-full text-sm text-purple-300 shadow hover:scale-105 transition cursor-default"
+              >ChatGPT</span
+            >
+            <span
+              class="bg-[#1a1a2e] border border-purple-900/50 px-4 py-1.5 rounded-full text-sm text-purple-300 shadow hover:scale-105 transition cursor-default"
+              >Cursor</span
+            >
+            <span
+              class="bg-[#1a1a2e] border border-purple-900/50 px-4 py-1.5 rounded-full text-sm text-purple-300 shadow hover:scale-105 transition cursor-default"
+              >v0</span
+            >
+          </div>
         </div>
-        <div
-          class="bg-[#23243a] px-4 py-2 rounded-full text-sm text-white shadow hover:scale-105 transition"
-        >
-          UI/UX
-        </div>
-        <div
-          class="bg-[#23243a] px-4 py-2 rounded-full text-sm text-white shadow hover:scale-105 transition"
-        >
-          Agile
-        </div>
-        <div
-          class="bg-[#23243a] px-4 py-2 rounded-full text-sm text-white shadow hover:scale-105 transition"
-        >
-          Tailwind CSS
-        </div>
-        <div
-          class="bg-[#23243a] px-4 py-2 rounded-full text-sm text-white shadow hover:scale-105 transition"
-        >
-          Redux
-        </div>
-        <div
-          class="bg-[#23243a] px-4 py-2 rounded-full text-sm text-white shadow hover:scale-105 transition"
-        >
-          REST APIs
-        </div>
-        <div
-          class="bg-[#23243a] px-4 py-2 rounded-full text-sm text-white shadow hover:scale-105 transition"
-        >
-          Git & GitHub
-        </div>
-        <div
-          class="bg-[#23243a] px-4 py-2 rounded-full text-sm text-white shadow hover:scale-105 transition"
-        >
-          Next.js
-        </div>
-        <div
-          class="bg-[#23243a] px-4 py-2 rounded-full text-sm text-white shadow hover:scale-105 transition"
-        >
-          MongoDB
-        </div>
-        <div
-          class="bg-[#23243a] px-4 py-2 rounded-full text-sm text-white shadow hover:scale-105 transition"
-        >
-          PostgreSQL
-        </div>
-        <div
-          class="bg-[#23243a] px-4 py-2 rounded-full text-sm text-white shadow hover:scale-105 transition"
-        >
-          InfluxDB
-        </div>
-        <div
-          class="bg-[#23243a] px-4 py-2 rounded-full text-sm text-white shadow hover:scale-105 transition"
-        >
-          Firebase
+
+        <div>
+          <p
+            class="text-xs text-gray-600 uppercase tracking-widest font-thin mb-3"
+          >
+            Certifications
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span
+              class="bg-[#23243a] px-4 py-1.5 rounded-full text-sm text-white shadow hover:scale-105 transition cursor-default"
+              >AWS — Guvi</span
+            >
+            <span
+              class="bg-[#23243a] px-4 py-1.5 rounded-full text-sm text-white shadow hover:scale-105 transition cursor-default"
+              >MySQL — Guvi</span
+            >
+          </div>
         </div>
       </div>
     </section>
-    <footer
-      class="w-full max-w-4xl mx-auto mt-12 flex flex-col items-center gap-3 text-center"
-    >
-      <div
-        class="flex flex-wrap gap-6 justify-center mb-2 text-gray-400 tracking-widest font-thin text-sm"
-      >
+
+    <div
+      class="w-full max-w-3xl my-10 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"
+    ></div>
+
+    <!-- ── EDUCATION ── -->
+    <section id="education" class="w-full max-w-3xl mb-2 fade-in">
+      <h2 class="text-2xl md:text-4xl font-bold mb-8 text-white tracking-wide">
+        Education
+      </h2>
+      <div class="flex flex-col gap-3">
+        <div
+          class="rounded-xl px-5 py-5 border border-[#1a1a2e] hover:border-[#2a2a4a] transition-all duration-200 hover:bg-[#0d0d1a]"
+        >
+          <span class="text-base font-semibold text-white"
+            >B.E. Mechanical Engineering</span
+          >
+          <div
+            class="flex flex-row flex-wrap items-center gap-1 text-gray-400 text-sm font-thin tracking-wider mt-1"
+          >
+            <span class="text-white">National Engineering College</span>
+            <span class="mx-1 text-gray-600">&bull;</span>
+            <span>Kovilpatti, Tamil Nadu</span>
+          </div>
+          <div class="text-gray-500 text-xs font-thin tracking-wider mt-1 mb-4">
+            Jun 2016 &mdash; May 2020 &bull; CGPA 7.4
+          </div>
+          <p class="text-gray-400 text-sm font-thin tracking-wide leading-7">
+            An engineering background that built strong analytical and
+            problem-solving foundations — skills that translate directly into
+            how I approach software architecture and debugging today.
+          </p>
+        </div>
+
+        <div
+          class="rounded-xl px-5 py-5 border border-[#1a1a2e] hover:border-[#2a2a4a] transition-all duration-200 hover:bg-[#0d0d1a]"
+        >
+          <span class="text-base font-semibold text-white"
+            >Full Stack Development — MERN</span
+          >
+          <div
+            class="flex flex-row flex-wrap items-center gap-1 text-gray-400 text-sm font-thin tracking-wider mt-1"
+          >
+            <a
+              href="https://www.guvi.in/"
+              target="_blank"
+              class="underline text-white"
+              >Guvi</a
+            >
+            <span class="mx-1 text-gray-600">&bull;</span>
+            <span>Online Certification</span>
+          </div>
+          <div class="text-gray-500 text-xs font-thin tracking-wider mt-1 mb-4">
+            Certification Course
+          </div>
+          <p class="text-gray-400 text-sm font-thin tracking-wide leading-7">
+            Completed a structured full-stack development program covering
+            MongoDB, Express.js, React, and Node.js — directly supporting the
+            transition into full-stack engineering.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <div
+      class="w-full max-w-3xl my-10 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"
+    ></div>
+
+    <!-- ── CONTACT ── -->
+    <section id="contact" class="w-full max-w-3xl mb-2 fade-in">
+      <h2 class="text-2xl md:text-4xl font-bold mb-4 text-white tracking-wide">
+        Contact
+      </h2>
+      <p class="text-gray-400 text-sm font-thin tracking-widest leading-8 mb-8">
+        I'm open to new opportunities and collaborations.<br />
+        Feel free to reach out — I'll get back to you.
+      </p>
+      <div class="flex flex-col gap-0 w-full max-w-sm">
+        <a
+          href="mailto:rijanfedo1998@gmail.com"
+          class="flex items-center gap-3 text-gray-400 hover:text-white text-sm font-thin tracking-wider py-3 border-b border-[#1a1a2e] transition-colors duration-200"
+        >
+          <svg
+            class="w-4 h-4 opacity-50"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+            />
+          </svg>
+          rijanfedo1998@gmail.com
+        </a>
         <a
           href="https://github.com/rijan08"
           target="_blank"
-          rel="noopener"
-          class="hover:text-pink-400 transition-colors"
+          class="flex items-center gap-3 text-gray-400 hover:text-white text-sm font-thin tracking-wider py-3 border-b border-[#1a1a2e] transition-colors duration-200"
         >
-          GitHub
+          <svg
+            class="w-4 h-4 opacity-50"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"
+            />
+          </svg>
+          github.com/rijan08
         </a>
         <a
           href="https://www.linkedin.com/in/rijan-s-5b93a5223/"
           target="_blank"
-          rel="noopener"
-          class="hover:text-pink-400 transition-colors"
+          class="flex items-center gap-3 text-gray-400 hover:text-white text-sm font-thin tracking-wider py-3 border-b border-[#1a1a2e] transition-colors duration-200"
         >
-          LinkedIn
+          <svg
+            class="w-4 h-4 opacity-50"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
+            />
+          </svg>
+          linkedin.com/in/rijan-s-5b93a5223
+        </a>
+        <a
+          href="https://x.com/rijanfedo"
+          target="_blank"
+          class="flex items-center gap-3 text-gray-400 hover:text-white text-sm font-thin tracking-wider py-3 border-b border-[#1a1a2e] transition-colors duration-200"
+        >
+          <svg
+            class="w-4 h-4 opacity-50"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.258 5.639L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+            />
+          </svg>
+          @rijanfedo
         </a>
         <a
           href="https://instagram.com/rijanfedo"
           target="_blank"
-          rel="noopener"
-          class="hover:text-pink-400 transition-colors"
+          class="flex items-center gap-3 text-gray-400 hover:text-white text-sm font-thin tracking-wider py-3 transition-colors duration-200"
         >
-          Instagram
-        </a>
-        <!-- <a
-          href="https://wa.me/919876543210"
-          target="_blank"
-          rel="noopener"
-          class="hover:text-pink-400 transition-colors"
-        >
-          WhatsApp
-        </a> -->
-        <a
-          href="https://x.com/rijanfedo"
-          target="_blank"
-          rel="noopener"
-          class="hover:text-pink-400 transition-colors"
-        >
-          Twitter
+          <svg
+            class="w-4 h-4 opacity-50"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <rect
+              x="2"
+              y="2"
+              width="20"
+              height="20"
+              rx="5"
+              ry="5"
+              stroke-width="1.5"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"
+            />
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke-width="2" />
+          </svg>
+          @rijanfedo
         </a>
       </div>
-      <!-- <div class="text-xs text-gray-500">&copy; 2025 Rijan Fedo. All rights reserved.</div> -->
+    </section>
+
+    <!-- Footer -->
+    <footer class="w-full max-w-3xl mx-auto mt-14 pb-2 flex justify-center">
+      <span class="text-gray-700 tracking-widest font-thin text-xs"
+        >© 2025 Rijan S</span
+      >
     </footer>
+
+    <!-- ── SCROLL TO TOP ── -->
+    <button
+      id="scrollTop"
+      aria-label="Scroll to top"
+      onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+    >
+      <svg
+        width="13"
+        height="13"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="white"
+        stroke-width="2.5"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M5 15l7-7 7 7"
+        />
+      </svg>
+    </button>
+
+    <!-- ── AI CHAT WIDGET ── -->
+    <div id="chat-bubble">
+      <!-- Toggle button -->
+      <button
+        id="chat-toggle"
+        aria-label="Ask about Rijan"
+        title="Ask me anything about Rijan ✨"
+      >
+        <!-- Sparkle / AI icon -->
+        <svg
+          width="22"
+          height="22"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="white"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"
+          />
+        </svg>
+      </button>
+
+      <!-- Chat panel -->
+      <div id="chat-panel">
+        <div id="chat-header">
+          <div class="chat-avatar">R</div>
+          <div class="chat-header-info">
+            <div class="chat-header-name">Ask about Rijan</div>
+            <div class="chat-header-sub">Powered by Claude AI</div>
+          </div>
+          <div class="chat-online-dot"></div>
+        </div>
+
+        <div id="chat-messages">
+          <div class="msg bot">
+            👋 Hi! I'm an AI that knows all about Rijan. Ask me anything — his
+            skills, experience, what he's looking for, or anything else!
+          </div>
+        </div>
+
+        <div id="chat-suggestions">
+          <button class="suggestion-chip" onclick="sendSuggestion(this)">
+            What's his stack?
+          </button>
+          <button class="suggestion-chip" onclick="sendSuggestion(this)">
+            Is he open to work?
+          </button>
+          <button class="suggestion-chip" onclick="sendSuggestion(this)">
+            Where is he based?
+          </button>
+          <button class="suggestion-chip" onclick="sendSuggestion(this)">
+            React Native experience?
+          </button>
+        </div>
+
+        <div id="chat-input-area">
+          <input
+            id="chat-input"
+            type="text"
+            placeholder="Ask anything about Rijan..."
+            maxlength="200"
+            onkeydown="if (event.key === 'Enter') sendMessage();"
+          />
+          <button id="chat-send" onclick="sendMessage()" aria-label="Send">
+            <svg
+              width="14"
+              height="14"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="white"
+              stroke-width="2.5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ── Scroll fade-in ──
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("visible");
+              observer.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.06 },
+      );
+      document
+        .querySelectorAll(".fade-in")
+        .forEach((el) => observer.observe(el));
+
+      // ── Scroll to top ──
+      const scrollBtn = document.getElementById("scrollTop");
+      window.addEventListener("scroll", () =>
+        scrollBtn.classList.toggle("show", window.scrollY > 400),
+      );
+
+      // ── Chat widget ──
+      const toggle = document.getElementById("chat-toggle");
+      const panel = document.getElementById("chat-panel");
+      const msgs = document.getElementById("chat-messages");
+      const input = document.getElementById("chat-input");
+      const send = document.getElementById("chat-send");
+      const suggestions = document.getElementById("chat-suggestions");
+
+      let isOpen = false;
+      let isLoading = false;
+      let history = [];
+
+      toggle.addEventListener("click", () => {
+        isOpen = !isOpen;
+        panel.classList.toggle("open", isOpen);
+        if (isOpen) setTimeout(() => input.focus(), 250);
+      });
+
+      // Close on outside click
+      document.addEventListener("click", (e) => {
+        if (
+          isOpen &&
+          !document.getElementById("chat-bubble").contains(e.target)
+        ) {
+          isOpen = false;
+          panel.classList.remove("open");
+        }
+      });
+
+      function addMessage(text, role) {
+        const div = document.createElement("div");
+        div.className = "msg " + role;
+        div.textContent = text;
+        msgs.appendChild(div);
+        msgs.scrollTop = msgs.scrollHeight;
+        return div;
+      }
+
+      function sendSuggestion(chip) {
+        input.value = chip.textContent;
+        suggestions.style.display = "none";
+        sendMessage();
+      }
+
+      async function sendMessage() {
+        const text = input.value.trim();
+        if (!text || isLoading) return;
+
+        input.value = "";
+        isLoading = true;
+        send.disabled = true;
+        suggestions.style.display = "none";
+
+        addMessage(text, "user");
+        history.push({ role: "user", content: text });
+
+        const typing = addMessage("Thinking...", "typing");
+
+        const SYSTEM = `You are an AI assistant embedded in Rijan's personal portfolio website. Answer questions about Rijan concisely and helpfully. Here is everything you know about him:
+
+Name: Rijan S
+Location: Bangalore, India
+Email: rijanfedo1998@gmail.com
+GitHub: github.com/rijan08
+LinkedIn: linkedin.com/in/rijan-s-5b93a5223
+Twitter/X: @rijanfedo
+Instagram: @rijanfedo
+
+Summary: Frontend-focused developer with 3+ years of experience. Specializes in React Native and mobile app development. Strong in Next.js, React.js. Currently expanding into backend/full-stack. Passionate about startups, clean code, and real-world problem solving.
+
+Experience:
+1. Software Engineer at Loadshare Networks (Feb 2025 – Present) — Bangalore. Building frontend features for logistics products at scale using React and React Native.
+2. Member of Technical Staff at Fyn Mobility (Mar 2023 – Dec 2024, 1yr 10mos) — Bangalore. Solely owned and maintained entire product (frontend + backend). React Native, Next.js, Django, AWS microservices.
+3. Junior Full Stack Developer at Uplogic Technologies (Feb 2022 – Feb 2023, 1yr) — Madurai. Multiple React Native projects, built one from scratch, React.js apps.
+
+Skills:
+- Frontend: React Native, React.js, Next.js, TypeScript, JavaScript, Tailwind CSS, Shadcn UI
+- State: Redux, Zustand, Context API
+- Backend: Python, Django, REST APIs, PostgreSQL, MongoDB, InfluxDB
+- Tools: Git, GitHub, AWS, Ubuntu, Trello, ClickUp
+- AI Tools: GitHub Copilot, Claude, ChatGPT, Cursor, v0
+- Certifications: Full Stack Dev MERN (Guvi), AWS (Guvi), MySQL (Guvi)
+
+Education: B.E. Mechanical Engineering, National Engineering College, Kovilpatti (2016–2020, CGPA 7.4)
+
+Languages: English (conversational), Tamil (native)
+
+Open to: Full-stack or frontend roles at product startups. Currently open to new opportunities.
+
+Keep answers short (2-4 sentences max). Be friendly and professional. If asked something you don't know about Rijan, say you don't have that info and suggest contacting him directly.`;
+
+        try {
+          const response = await fetch(
+            "https://api.anthropic.com/v1/messages",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                model: "claude-sonnet-4-20250514",
+                max_tokens: 1000,
+                system: SYSTEM,
+                messages: history,
+              }),
+            },
+          );
+
+          const data = await response.json();
+          const reply =
+            data.content?.[0]?.text ||
+            "Sorry, I couldn't get a response. Try again!";
+
+          typing.remove();
+          addMessage(reply, "bot");
+          history.push({ role: "assistant", content: reply });
+        } catch (err) {
+          typing.remove();
+          addMessage("Something went wrong. Please try again.", "bot");
+        }
+
+        isLoading = false;
+        send.disabled = false;
+        input.focus();
+      }
+    </script>
   </body>
 </html>
