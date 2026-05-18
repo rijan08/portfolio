@@ -1,0 +1,478 @@
+@import "tailwindcss";
+@source "../index.html";
+
+body {
+  font-family: "Biotif", sans-serif;
+}
+
+/* Smooth anchor scrolling that respects the sticky nav height */
+html {
+  scroll-behavior: smooth;
+}
+section[id] {
+  scroll-margin-top: 80px;
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.55s ease,
+    transform 0.55s ease;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Disable hover-driven scale/translate on touch devices so they don't
+   stick as a "pressed" state after a tap. */
+@media (hover: none) {
+  a:hover,
+  button:hover,
+  span:hover {
+    transform: none !important;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #000;
+}
+::-webkit-scrollbar-thumb {
+  background: #222;
+  border-radius: 3px;
+}
+
+/* Scroll to top */
+#scrollTop {
+  position: fixed;
+  bottom: 1.8rem;
+  right: 1.8rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  z-index: 98;
+}
+#scrollTop.show {
+  opacity: 1;
+  pointer-events: all;
+}
+#scrollTop:hover {
+  background: rgba(255, 255, 255, 0.13);
+}
+
+/* ── Nav ── */
+#nav-links {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Hamburger button — hidden on desktop */
+#nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  flex-shrink: 0;
+}
+#nav-toggle span {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background: #ccc;
+  border-radius: 2px;
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease;
+  transform-origin: center;
+}
+#nav-toggle.open span:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+#nav-toggle.open span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+#nav-toggle.open span:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
+
+/* Below md (768px): hamburger + collapsible menu. Aligned with the
+   "Rijan S" brand visibility (`block md:hidden`) so we never get a
+   two-row stacked nav in the tablet range. */
+@media (max-width: 767px) {
+  #nav-toggle {
+    display: flex;
+  }
+
+  /* Mobile nav header row: name on left, hamburger on right */
+  nav > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  #nav-links {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    width: 100%;
+    padding-top: 0.5rem;
+    padding-bottom: 0.25rem;
+  }
+  #nav-links.open {
+    display: flex;
+  }
+  #nav-links li {
+    width: 100%;
+  }
+  #nav-links li a {
+    display: block;
+    width: 100%;
+    padding: 0.85rem 0.5rem !important;
+    font-size: 0.8rem !important;
+    letter-spacing: 0.12em !important;
+    border-bottom: 1px solid #111;
+  }
+  #nav-links li:last-child a {
+    border-bottom: none;
+  }
+}
+
+/* ── About section profile image ── */
+.profile-img-wrap {
+  flex-shrink: 0;
+  width: 16rem;
+}
+.profile-img-wrap img {
+  width: 100%;
+  height: 22rem;
+  object-fit: cover;
+  border-radius: 0.75rem;
+}
+@media (max-width: 767px) {
+  .profile-img-wrap {
+    width: 100%;
+    max-width: 100%;
+  }
+  .profile-img-wrap img {
+    width: 100%;
+    height: 18rem;
+    border-radius: 0.75rem;
+  }
+}
+@media (max-width: 480px) {
+  .profile-img-wrap img {
+    height: 14rem;
+  }
+}
+
+/* ── Chat Widget ── */
+#chat-bubble {
+  position: fixed;
+  bottom: 1.8rem;
+  left: 1.8rem;
+  z-index: 999;
+}
+
+#chat-toggle {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ec4899, #a855f7, #6366f1);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 24px rgba(168, 85, 247, 0.35);
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+#chat-toggle:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 30px rgba(168, 85, 247, 0.5);
+}
+
+#chat-panel {
+  position: absolute;
+  bottom: 64px;
+  left: 0;
+  width: 340px;
+  max-height: 480px;
+  background: #0f0f0f;
+  border: 1px solid #2a2a2a;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+  transform: scale(0.92) translateY(10px);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease;
+  transform-origin: bottom left;
+}
+#chat-panel.open {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* On small screens, make chat panel fill most of the viewport width */
+@media (max-width: 480px) {
+  #chat-panel {
+    width: calc(100vw - 2rem);
+    left: 0;
+    max-height: 70vh;
+  }
+  /* Prevent panel from going off screen on right */
+  #chat-bubble {
+    left: 1rem;
+    bottom: 1rem;
+  }
+  #scrollTop {
+    bottom: 1rem;
+    right: 1rem;
+  }
+}
+
+#chat-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid #1e1e1e;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.chat-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ec4899, #a855f7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  color: white;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.chat-header-info {
+  flex: 1;
+}
+.chat-header-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+}
+.chat-header-sub {
+  font-size: 0.7rem;
+  color: #666;
+  margin-top: 1px;
+}
+.chat-online-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 6px #22c55e;
+  flex-shrink: 0;
+}
+
+#chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  scroll-behavior: smooth;
+}
+#chat-messages::-webkit-scrollbar {
+  width: 3px;
+}
+#chat-messages::-webkit-scrollbar-thumb {
+  background: #333;
+}
+
+.msg {
+  max-width: 85%;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  padding: 9px 12px;
+  border-radius: 12px;
+  word-break: break-word;
+}
+.msg.bot {
+  background: #1a1a1a;
+  color: #ccc;
+  border-bottom-left-radius: 4px;
+  align-self: flex-start;
+}
+.msg.user {
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+  align-self: flex-end;
+}
+.msg.typing {
+  background: #1a1a1a;
+  color: #666;
+  align-self: flex-start;
+  font-style: italic;
+  font-size: 0.75rem;
+}
+
+/* Suggestion chips */
+#chat-suggestions {
+  padding: 0 14px 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.suggestion-chip {
+  font-size: 0.7rem;
+  color: #888;
+  border: 1px solid #2a2a2a;
+  padding: 4px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition:
+    color 0.15s,
+    border-color 0.15s,
+    background 0.15s;
+  background: transparent;
+  white-space: nowrap;
+}
+.suggestion-chip:hover {
+  color: #fff;
+  border-color: #a855f7;
+  background: rgba(168, 85, 247, 0.1);
+}
+
+#chat-input-area {
+  padding: 10px 12px;
+  border-top: 1px solid #1e1e1e;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+#chat-input {
+  flex: 1;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #e5e5e5;
+  outline: none;
+  font-family: "Biotif", sans-serif;
+  transition: border-color 0.2s;
+  /* Prevent iOS zoom on focus by enforcing a 16px minimum */
+  font-size: max(0.8rem, 16px);
+}
+#chat-input:focus {
+  border-color: #a855f7;
+}
+#chat-input::placeholder {
+  color: #444;
+}
+
+#chat-send {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #ec4899, #a855f7);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: opacity 0.2s;
+}
+#chat-send:hover {
+  opacity: 0.85;
+}
+#chat-send:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Contact links: full width on mobile ── */
+@media (max-width: 640px) {
+  #contact .contact-list {
+    max-width: 100% !important;
+  }
+}
+
+/* ── About CTAs full-width on the smallest phones ── */
+@media (max-width: 380px) {
+  #about a[href$=".pdf"],
+  #about a[href^="mailto:"] {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+}
+
+/* ── Hide the scroll-top button while the chat panel is open on small
+      screens so they don't fight for the same corner ── */
+@media (max-width: 480px) {
+  body.chat-open #scrollTop {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+}
+
+/* ── Prevent horizontal overflow ── */
+* {
+  box-sizing: border-box;
+}
+body {
+  overflow-x: hidden;
+}
+
+/* ── Tighter padding + smaller hero on very small phones ── */
+@media (max-width: 380px) {
+  body {
+    padding-left: 0.875rem;
+    padding-right: 0.875rem;
+  }
+  #about h1 {
+    font-size: 1.65rem;
+    line-height: 1.15;
+  }
+}
+
+/* Bigger tap targets for skill chips on touch devices */
+@media (max-width: 767px) {
+  #skills span {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+}
