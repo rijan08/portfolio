@@ -4,11 +4,85 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Rijan – AI-Augmented Developer</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/tailwind.css" />
     <meta
       name="description"
       content="I'm Rijan, a frontend developer who ships faster with AI — specializing in React Native, prompt-driven workflows, and building products at startup speed."
     />
+
+    <!-- Open Graph (LinkedIn, WhatsApp, Facebook) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://rijan08.github.io/portfolio/" />
+    <meta property="og:title" content="Rijan S – AI-Augmented Developer" />
+    <meta
+      property="og:description"
+      content="Frontend developer with 4+ years of experience building mobile apps with React Native. AI-native, startup-ready, based in Bangalore."
+    />
+    <meta
+      property="og:image"
+      content="https://rijan08.github.io/portfolio/images/profile.jpeg"
+    />
+    <meta property="og:image:alt" content="Rijan S — Frontend Developer" />
+
+    <!-- Twitter / X card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@rijanfedo" />
+    <meta name="twitter:title" content="Rijan S – AI-Augmented Developer" />
+    <meta
+      name="twitter:description"
+      content="Frontend developer with 4+ years of experience building mobile apps with React Native. AI-native, startup-ready, based in Bangalore."
+    />
+    <meta
+      name="twitter:image"
+      content="https://rijan08.github.io/portfolio/images/profile.jpeg"
+    />
+
+    <!-- JSON-LD structured data for Google -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Rijan S",
+        "jobTitle": "Software Engineer",
+        "description": "Frontend developer with 4+ years of experience building mobile applications with React Native. Expanding into full-stack engineering.",
+        "url": "https://rijan08.github.io/portfolio/",
+        "image": "https://rijan08.github.io/portfolio/images/profile.jpeg",
+        "email": "mailto:rijanfedo1998@gmail.com",
+        "worksFor": {
+          "@type": "Organization",
+          "name": "Loadshare Networks",
+          "url": "https://www.loadshare.net/"
+        },
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Bangalore",
+          "addressRegion": "Karnataka",
+          "addressCountry": "IN"
+        },
+        "alumniOf": {
+          "@type": "CollegeOrUniversity",
+          "name": "National Engineering College, Kovilpatti"
+        },
+        "knowsAbout": [
+          "React Native",
+          "React.js",
+          "Next.js",
+          "TypeScript",
+          "JavaScript",
+          "Tailwind CSS",
+          "Python",
+          "Django",
+          "AWS"
+        ],
+        "sameAs": [
+          "https://github.com/rijan08",
+          "https://www.linkedin.com/in/rijan-s-5b93a5223/",
+          "https://x.com/rijanfedo",
+          "https://instagram.com/rijanfedo"
+        ]
+      }
+    </script>
+
     <link href="https://fonts.cdnfonts.com/css/biotif" rel="stylesheet" />
     <link rel="icon" type="image/jpeg" href="images/favicon.png" />
     <style>
@@ -26,6 +100,15 @@
       .fade-in.visible {
         opacity: 1;
         transform: translateY(0);
+      }
+
+      /* ── Hero fills the first viewport (minus sticky nav) ── */
+      #about {
+        min-height: calc(100vh - 5.5rem);
+        min-height: calc(100dvh - 5.5rem);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
       }
 
       ::-webkit-scrollbar {
@@ -71,6 +154,10 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+      }
+      #nav-links a.active {
+        color: #d8b4fe;
+        font-weight: 600;
       }
 
       /* Hamburger button — hidden on desktop */
@@ -152,11 +239,11 @@
       /* ── About section profile image ── */
       .profile-img-wrap {
         flex-shrink: 0;
-        width: 16rem;
+        width: 18rem;
       }
       .profile-img-wrap img {
         width: 100%;
-        height: 22rem;
+        height: 26rem;
         object-fit: cover;
         border-radius: 0.75rem;
       }
@@ -489,7 +576,7 @@
     <!-- ── ABOUT ── -->
     <section id="about" class="w-full max-w-3xl mt-4 mb-2 fade-in">
       <h1
-        class="text-3xl md:text-5xl font-extrabold mb-8 bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent tracking-wider"
+        class="text-3xl md:text-5xl font-extrabold mb-8 md:mb-10 bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent tracking-wider"
       >
         AI-Native. Startup-Ready.
       </h1>
@@ -505,12 +592,12 @@
         </div>
 
         <div
-          class="w-full flex flex-col justify-center tracking-widest font-thin leading-8 text-sm text-gray-400"
+          class="w-full flex flex-col justify-center font-light tracking-wide leading-7 md:leading-8 text-base text-gray-400"
         >
           <p class="mb-3">
             <span class="font-medium text-white">Hey, I'm Rijan</span> — a
             Frontend Developer with
-            <span class="font-medium text-white">3+ years of experience</span>,
+            <span class="font-medium text-white">4+ years of experience</span>,
             building
             <span class="font-medium text-white">mobile applications</span> with
             <span class="font-medium text-white">React Native</span>. I treat
@@ -521,12 +608,12 @@
             think sharper, and ship better products.
           </p>
           <p class="mb-3">
-            I use
-            <span class="font-medium text-white"
-              >Claude, Cursor, Copilot, and v0</span
-            >
-            daily — to prototype UIs in minutes, debug with context, generate
-            boilerplate on demand, and keep my focus on what actually matters:
+            After working with Cursor and Copilot, I've settled on
+            <span class="font-medium text-white">Claude Code</span> for coding
+            and <span class="font-medium text-white">ChatGPT</span> as my go-to
+            search engine — to prototype UIs in minutes, debug with context,
+            generate boilerplate on demand, and keep my focus on what actually
+            matters:
             <span class="font-medium text-white"
               >product decisions and user experience</span
             >.
@@ -545,7 +632,7 @@
             <a
               href="./assets/Rijan.pdf"
               download
-              class="flex items-center gap-2 bg-black px-4 py-2 text-xs font-normal rounded-lg shadow hover:scale-105 transition-all duration-200 border border-[#23243a] text-gray-400 hover:text-pink-400"
+              class="flex items-center gap-2 bg-black px-4 py-2 text-xs font-normal rounded-lg shadow hover:scale-105 transition-all duration-200 border border-[#23243a] text-gray-400 hover:text-purple-300"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -565,9 +652,8 @@
             </a>
             <a
               href="mailto:rijanfedo1998@gmail.com"
-              class="flex items-center gap-2 bg-black px-4 py-2 text-xs font-normal rounded-lg shadow hover:scale-105 transition-all duration-200 border border-[#23243a] text-gray-400 hover:text-pink-400"
+              class="flex items-center gap-2 bg-black px-4 py-2 text-xs font-normal rounded-lg shadow hover:scale-105 transition-all duration-200 border border-[#23243a] text-gray-400 hover:text-purple-300"
             >
-              <!-- href="/cdn-cgi/l/email-protection#ef9d86858e81898a8b80ded6d6d7af88828e8683c18c8082" -->
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="w-4 h-4"
@@ -602,15 +688,16 @@
         <div
           class="rounded-xl px-4 sm:px-5 py-5 border border-[#1a1a2e] hover:border-[#2a2a4a] transition-all duration-200 hover:bg-[#0d0d1a]"
         >
-          <span class="text-base font-semibold text-teal-300"
+          <span class="text-base font-semibold text-purple-300"
             >Software Engineer</span
           >
           <div
-            class="flex flex-row flex-wrap items-center gap-1 text-gray-400 text-sm font-thin tracking-wider mt-1"
+            class="flex flex-row flex-wrap items-center gap-1 text-gray-400 text-sm font-light tracking-wide mt-1"
           >
             <a
               href="https://www.loadshare.net/"
               target="_blank"
+              rel="noopener noreferrer"
               class="underline text-white"
               >Loadshare Networks</a
             >
@@ -621,7 +708,7 @@
             Feb 2025 &mdash; Present
           </div>
           <ul
-            class="text-gray-400 text-sm font-thin tracking-wide leading-7 list-none space-y-1"
+            class="text-gray-400 text-base font-light tracking-wide leading-7 list-none space-y-1"
           >
             <li class="before:content-['–'] before:mr-2 before:text-gray-600">
               Building and iterating on frontend features for logistics products
@@ -629,9 +716,9 @@
               feedback loops.
             </li>
             <li class="before:content-['–'] before:mr-2 before:text-gray-600">
-              Working across React and React Native with Cursor and Copilot in
-              the loop — shipping reliable, performant interfaces faster than
-              traditional workflows allow.
+              Working across React and React Native with Claude in the loop —
+              shipping reliable, performant interfaces faster than traditional
+              workflows allow.
             </li>
             <li class="before:content-['–'] before:mr-2 before:text-gray-600">
               Collaborating with cross-functional teams in a fast-paced startup
@@ -648,11 +735,12 @@
             >Member of Technical Staff</span
           >
           <div
-            class="flex flex-row flex-wrap items-center gap-1 text-gray-400 text-sm font-thin tracking-wider mt-1"
+            class="flex flex-row flex-wrap items-center gap-1 text-gray-400 text-sm font-light tracking-wide mt-1"
           >
             <a
               href="https://www.fynmobility.com/"
               target="_blank"
+              rel="noopener noreferrer"
               class="underline text-white"
               >Fyn Mobility</a
             >
@@ -663,7 +751,7 @@
             Mar 2023 &mdash; Dec 2024 &bull; 1 yr 10 mos
           </div>
           <ul
-            class="text-gray-400 text-sm font-thin tracking-wide leading-7 list-none space-y-1"
+            class="text-gray-400 text-base font-light tracking-wide leading-7 list-none space-y-1"
           >
             <li class="before:content-['–'] before:mr-2 before:text-gray-600">
               Solely owned and maintained the entire product — both frontend and
@@ -695,11 +783,12 @@
             >Junior Full Stack Developer</span
           >
           <div
-            class="flex flex-row flex-wrap items-center gap-1 text-gray-400 text-sm font-thin tracking-wider mt-1"
+            class="flex flex-row flex-wrap items-center gap-1 text-gray-400 text-sm font-light tracking-wide mt-1"
           >
             <a
               href="https://www.uplogictech.com/"
               target="_blank"
+              rel="noopener noreferrer"
               class="underline text-white"
               >Uplogic Technologies</a
             >
@@ -710,7 +799,7 @@
             Feb 2022 &mdash; Feb 2023 &bull; 1 yr
           </div>
           <ul
-            class="text-gray-400 text-sm font-thin tracking-wide leading-7 list-none space-y-1"
+            class="text-gray-400 text-base font-light tracking-wide leading-7 list-none space-y-1"
           >
             <li class="before:content-['–'] before:mr-2 before:text-gray-600">
               Worked extensively on multiple React Native projects, contributing
@@ -876,23 +965,11 @@
           <div class="flex flex-wrap gap-2">
             <span
               class="bg-[#1a1a2e] border border-purple-900/50 px-4 py-1.5 rounded-full text-sm text-purple-300 shadow hover:scale-105 transition cursor-default"
-              >GitHub Copilot</span
-            >
-            <span
-              class="bg-[#1a1a2e] border border-purple-900/50 px-4 py-1.5 rounded-full text-sm text-purple-300 shadow hover:scale-105 transition cursor-default"
               >Claude</span
             >
             <span
               class="bg-[#1a1a2e] border border-purple-900/50 px-4 py-1.5 rounded-full text-sm text-purple-300 shadow hover:scale-105 transition cursor-default"
               >ChatGPT</span
-            >
-            <span
-              class="bg-[#1a1a2e] border border-purple-900/50 px-4 py-1.5 rounded-full text-sm text-purple-300 shadow hover:scale-105 transition cursor-default"
-              >Cursor</span
-            >
-            <span
-              class="bg-[#1a1a2e] border border-purple-900/50 px-4 py-1.5 rounded-full text-sm text-purple-300 shadow hover:scale-105 transition cursor-default"
-              >v0</span
             >
           </div>
         </div>
@@ -934,16 +1011,16 @@
             >B.E. Mechanical Engineering</span
           >
           <div
-            class="flex flex-row flex-wrap items-center gap-1 text-gray-400 text-sm font-thin tracking-wider mt-1"
+            class="flex flex-row flex-wrap items-center gap-1 text-gray-400 text-sm font-light tracking-wide mt-1"
           >
             <span class="text-white">National Engineering College</span>
             <span class="mx-1 text-gray-600">&bull;</span>
             <span>Kovilpatti, Tamil Nadu</span>
           </div>
           <div class="text-gray-500 text-xs font-thin tracking-wider mt-1 mb-4">
-            Jun 2016 &mdash; May 2020 &bull; CGPA 7.4
+            Jun 2016 &mdash; May 2020
           </div>
-          <p class="text-gray-400 text-sm font-thin tracking-wide leading-7">
+          <p class="text-gray-400 text-base font-light tracking-wide leading-7">
             An engineering background that built strong analytical and
             problem-solving foundations — skills that translate directly into
             how I approach software architecture and debugging today.
@@ -957,11 +1034,12 @@
             >Full Stack Development — MERN</span
           >
           <div
-            class="flex flex-row flex-wrap items-center gap-1 text-gray-400 text-sm font-thin tracking-wider mt-1"
+            class="flex flex-row flex-wrap items-center gap-1 text-gray-400 text-sm font-light tracking-wide mt-1"
           >
             <a
               href="https://www.guvi.in/"
               target="_blank"
+              rel="noopener noreferrer"
               class="underline text-white"
               >Guvi</a
             >
@@ -971,7 +1049,7 @@
           <div class="text-gray-500 text-xs font-thin tracking-wider mt-1 mb-4">
             Certification Course
           </div>
-          <p class="text-gray-400 text-sm font-thin tracking-wide leading-7">
+          <p class="text-gray-400 text-base font-light tracking-wide leading-7">
             Completed a structured full-stack development program covering
             MongoDB, Express.js, React, and Node.js — directly supporting the
             transition into full-stack engineering.
@@ -989,43 +1067,60 @@
       <h2 class="text-2xl md:text-4xl font-bold mb-4 text-white tracking-wide">
         Contact
       </h2>
-      <p class="text-gray-400 text-sm font-thin tracking-widest leading-8 mb-8">
+      <p
+        class="text-gray-400 text-base font-light tracking-wide leading-7 mb-8"
+      >
         I'm open to new opportunities — especially teams where AI is part of the
         culture, not an afterthought.<br />
         Drop me a message and I'll get back to you.
       </p>
       <div class="contact-list flex flex-col gap-0 w-full max-w-sm">
-        <a
-          href="mailto:rijanfedo1998@gmail.com"
-          class="flex items-center gap-3 text-gray-400 hover:text-white text-sm font-thin tracking-wider py-3 border-b border-[#1a1a2e] transition-colors duration-200"
-        >
-          <!-- href="/cdn-cgi/l/email-protection#8bf9e2e1eae5edeeefe4bab2b2b3cbece6eae2e7a5e8e4e6" -->
-          <svg
-            class="w-4 h-4 opacity-50 flex-shrink-0"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+        <div class="flex items-center gap-3 border-b border-[#1a1a2e]">
+          <a
+            href="mailto:rijanfedo1998@gmail.com"
+            class="flex items-center gap-3 text-gray-400 hover:text-white text-sm font-light tracking-wide py-3 transition-colors duration-200 flex-1 min-w-0"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
-              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-            />
-          </svg>
-          <span class="truncate"
-            ><span
-              class="__cf_email__"
-              data-cfemail="mailto:rijanfedo1998@gmail.com"
-              >rijanfedo1998@gmail.com</span
-            ></span
+            <svg
+              class="w-4 h-4 opacity-50 flex-shrink-0"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+              />
+            </svg>
+            <span class="truncate">rijanfedo1998@gmail.com</span>
+          </a>
+          <button
+            id="copy-email"
+            aria-label="Copy email address"
+            class="flex items-center gap-1.5 text-xs text-gray-500 hover:text-purple-300 border border-[#23243a] rounded-md px-2.5 py-1 transition-colors duration-200 flex-shrink-0"
           >
-          <!-- data-cfemail="55273c3f343b3330313a646c6c6d153238343c397b363a38" -->
-        </a>
+            <svg
+              class="w-3.5 h-3.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+              />
+            </svg>
+            <span>Copy</span>
+          </button>
+        </div>
         <a
           href="https://github.com/rijan08"
           target="_blank"
-          class="flex items-center gap-3 text-gray-400 hover:text-white text-sm font-thin tracking-wider py-3 border-b border-[#1a1a2e] transition-colors duration-200"
+          rel="noopener noreferrer"
+          class="flex items-center gap-3 text-gray-400 hover:text-white text-sm font-light tracking-wide py-3 border-b border-[#1a1a2e] transition-colors duration-200"
         >
           <svg
             class="w-4 h-4 opacity-50 flex-shrink-0"
@@ -1041,7 +1136,8 @@
         <a
           href="https://www.linkedin.com/in/rijan-s-5b93a5223/"
           target="_blank"
-          class="flex items-center gap-3 text-gray-400 hover:text-white text-sm font-thin tracking-wider py-3 border-b border-[#1a1a2e] transition-colors duration-200"
+          rel="noopener noreferrer"
+          class="flex items-center gap-3 text-gray-400 hover:text-white text-sm font-light tracking-wide py-3 border-b border-[#1a1a2e] transition-colors duration-200"
         >
           <svg
             class="w-4 h-4 opacity-50 flex-shrink-0"
@@ -1057,7 +1153,8 @@
         <a
           href="https://x.com/rijanfedo"
           target="_blank"
-          class="flex items-center gap-3 text-gray-400 hover:text-white text-sm font-thin tracking-wider py-3 border-b border-[#1a1a2e] transition-colors duration-200"
+          rel="noopener noreferrer"
+          class="flex items-center gap-3 text-gray-400 hover:text-white text-sm font-light tracking-wide py-3 border-b border-[#1a1a2e] transition-colors duration-200"
         >
           <svg
             class="w-4 h-4 opacity-50 flex-shrink-0"
@@ -1073,7 +1170,8 @@
         <a
           href="https://instagram.com/rijanfedo"
           target="_blank"
-          class="flex items-center gap-3 text-gray-400 hover:text-white text-sm font-thin tracking-wider py-3 transition-colors duration-200"
+          rel="noopener noreferrer"
+          class="flex items-center gap-3 text-gray-400 hover:text-white text-sm font-light tracking-wide py-3 transition-colors duration-200"
         >
           <svg
             class="w-4 h-4 opacity-50 flex-shrink-0"
@@ -1106,7 +1204,7 @@
     <!-- Footer -->
     <footer class="w-full max-w-3xl mx-auto mt-14 pb-2 flex justify-center">
       <span class="text-gray-700 tracking-widest font-thin text-xs"
-        >© 2025 Rijan S</span
+        >© <span id="footer-year">2026</span> Rijan S</span
       >
     </footer>
 
@@ -1133,7 +1231,8 @@
     </button>
 
     <!-- ── AI CHAT WIDGET ── -->
-    <div id="chat-bubble">
+    <!-- Hidden until the API proxy is set up — remove style="display: none" to re-enable -->
+    <div id="chat-bubble" style="display: none">
       <button
         id="chat-toggle"
         aria-label="Ask about Rijan"
@@ -1215,11 +1314,11 @@
       </div>
     </div>
 
-    <script
-      data-cfasync="false"
-      src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
-    ></script>
     <script>
+      // ── Footer year ──
+      document.getElementById("footer-year").textContent =
+        new Date().getFullYear();
+
       // ── Hamburger nav toggle ──
       const navToggle = document.getElementById("nav-toggle");
       const navLinks = document.getElementById("nav-links");
@@ -1254,6 +1353,45 @@
       document
         .querySelectorAll(".fade-in")
         .forEach((el) => observer.observe(el));
+
+      // ── Active nav highlighting ──
+      const navAnchors = document.querySelectorAll("#nav-links a");
+      const sectionObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              navAnchors.forEach((a) =>
+                a.classList.toggle(
+                  "active",
+                  a.getAttribute("href") === "#" + entry.target.id,
+                ),
+              );
+            }
+          });
+        },
+        { rootMargin: "-40% 0px -55% 0px" },
+      );
+      document
+        .querySelectorAll("section[id]")
+        .forEach((s) => sectionObserver.observe(s));
+
+      // ── Copy email ──
+      const copyBtn = document.getElementById("copy-email");
+      const copyLabel = copyBtn.querySelector("span");
+      copyBtn.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText("rijanfedo1998@gmail.com");
+          copyLabel.textContent = "Copied ✓";
+        } catch {
+          copyLabel.textContent = "Press ⌘C";
+          window
+            .getSelection()
+            .selectAllChildren(
+              copyBtn.closest("div").querySelector(".truncate"),
+            );
+        }
+        setTimeout(() => (copyLabel.textContent = "Copy"), 1800);
+      });
 
       // ── Scroll to top ──
       const scrollBtn = document.getElementById("scrollTop");
@@ -1328,7 +1466,7 @@ LinkedIn: linkedin.com/in/rijan-s-5b93a5223
 Twitter/X: @rijanfedo
 Instagram: @rijanfedo
 
-Summary: Frontend-focused developer with 3+ years of experience. Specializes in React Native and mobile app development. Strong in Next.js, React.js. Currently expanding into backend/full-stack. Passionate about startups, clean code, and real-world problem solving.
+Summary: Frontend-focused developer with 4+ years of experience. Specializes in React Native and mobile app development. Strong in Next.js, React.js. Currently expanding into backend/full-stack. Passionate about startups, clean code, and real-world problem solving.
 
 Experience:
 1. Software Engineer at Loadshare Networks (Feb 2025 – Present) — Bangalore. Building frontend features for logistics products at scale using React and React Native.
@@ -1340,10 +1478,10 @@ Skills:
 - State: Redux, Zustand, Context API
 - Backend: Python, Django, REST APIs, PostgreSQL, MongoDB, InfluxDB
 - Tools: Git, GitHub, AWS, Ubuntu, Trello, ClickUp
-- AI Tools: GitHub Copilot, Claude, ChatGPT, Cursor, v0
+- AI Tools: Claude (tool of choice for coding), ChatGPT (go-to search engine); previously used Cursor and GitHub Copilot
 - Certifications: Full Stack Dev MERN (Guvi), AWS (Guvi), MySQL (Guvi)
 
-Education: B.E. Mechanical Engineering, National Engineering College, Kovilpatti (2016–2020, CGPA 7.4)
+Education: B.E. Mechanical Engineering, National Engineering College, Kovilpatti (2016–2020)
 
 Languages: English (conversational), Tamil (native)
 
