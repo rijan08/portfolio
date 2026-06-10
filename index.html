@@ -141,6 +141,11 @@
         opacity: 1;
         transform: translateY(0);
       }
+      /* Sections already in view on load (e.g. after a refresh mid-page)
+         appear instantly instead of sliding up */
+      .fade-in.no-anim {
+        transition: none;
+      }
 
       /* ── Hero fills the first viewport (minus sticky nav) ── */
       #about {
@@ -1391,10 +1396,17 @@
       });
 
       // ── Scroll fade-in ──
+      // Sections visible shortly after load (initial paint / refresh
+      // scroll-restoration) appear instantly; only sections scrolled to
+      // later get the slide-up animation.
+      const pageLoadedAt = performance.now();
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((e) => {
             if (e.isIntersecting) {
+              if (performance.now() - pageLoadedAt < 600) {
+                e.target.classList.add("no-anim");
+              }
               e.target.classList.add("visible");
               observer.unobserve(e.target);
             }
