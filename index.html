@@ -90,6 +90,48 @@
         font-family: "Biotif", sans-serif;
       }
 
+      /* Smooth anchor scrolling, offset for the sticky nav */
+      html {
+        scroll-behavior: smooth;
+      }
+      section[id] {
+        scroll-margin-top: 80px;
+      }
+
+      /* No hover-scale effects on touch devices */
+      @media (hover: none) {
+        a:hover,
+        button:hover,
+        span:hover {
+          transform: none !important;
+        }
+      }
+
+      /* Very small screens */
+      @media (max-width: 380px) {
+        body {
+          padding-left: 0.875rem;
+          padding-right: 0.875rem;
+        }
+        #about h1 {
+          font-size: 1.65rem;
+          line-height: 1.15;
+        }
+        #about a[href$=".pdf"],
+        #about a[href^="mailto:"] {
+          flex: 1 1 100%;
+          justify-content: center;
+        }
+      }
+
+      /* Larger tap targets for skill chips on mobile */
+      @media (max-width: 767px) {
+        #skills span {
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
+        }
+      }
+
       .fade-in {
         opacity: 0;
         transform: translateY(20px);
