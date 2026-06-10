@@ -90,10 +90,8 @@
         font-family: "Biotif", sans-serif;
       }
 
-      /* Smooth anchor scrolling, offset for the sticky nav */
-      html {
-        scroll-behavior: smooth;
-      }
+      /* Anchor offset for the sticky nav (smooth scroll is JS-driven so
+         refresh scroll-restoration stays instant) */
       section[id] {
         scroll-margin-top: 80px;
       }
@@ -1377,6 +1375,18 @@
           navToggle.classList.remove("open");
           navLinks.classList.remove("open");
           navToggle.setAttribute("aria-expanded", "false");
+        });
+      });
+
+      // Smooth scroll for in-page anchors (kept out of CSS so the browser's
+      // scroll restoration on refresh stays instant)
+      document.querySelectorAll('a[href^="#"]').forEach((link) => {
+        link.addEventListener("click", (e) => {
+          const target = document.querySelector(link.getAttribute("href"));
+          if (!target) return;
+          e.preventDefault();
+          target.scrollIntoView({ behavior: "smooth" });
+          window.history.pushState(null, "", link.getAttribute("href"));
         });
       });
 
